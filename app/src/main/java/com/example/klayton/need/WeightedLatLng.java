@@ -1,0 +1,61 @@
+package com.example.klayton.need;
+
+import com.google.android.gms.maps.model.LatLng;
+
+/**
+ * Created by Klayton on 11-Jan-16.
+ */
+public class WeightedLatLng implements PointQuadTree.Item {
+
+    /**
+     * Default intensity to use when intensity not specified
+     */
+    public static final double DEFAULT_INTENSITY = 1;
+
+    /**
+     * Projection to use for points
+     * Converts LatLng to (x, y) coordinates using a SphericalMercatorProjection
+     */
+    private static final SphericalMercatorProjection sProjection =
+            new SphericalMercatorProjection(HeatmapTileProvider.WORLD_WIDTH);
+
+    private Point mPoint;
+
+    private double mIntensity;
+
+    /**
+     * Constructor
+     *
+     * @param latLng    LatLng to add to wrapper
+     * @param intensity Intensity to use: should be greater than 0
+     *                  Default value is 1.
+     *                  This represents the "importance" or "value" of this particular point
+     *                  Higher intensity values map to higher colours.
+     *                  Intensity is additive: having two points of intensity 1 at the same
+     *                  location is identical to having one of intensity 2.
+     */
+    public WeightedLatLng(LatLng latLng, double intensity) {
+        mPoint = sProjection.toPoint(latLng);
+        if (intensity >= 0) mIntensity = intensity;
+        else mIntensity = DEFAULT_INTENSITY;
+    }
+
+    /**
+     * Constructor that uses default value for intensity
+     *
+     * @param latLng LatLng to add to wrapper
+     */
+    public WeightedLatLng(LatLng latLng) {
+        this(latLng, DEFAULT_INTENSITY);
+    }
+
+    public Point getPoint() {
+        return mPoint;
+    }
+
+    public double getIntensity() {
+        return mIntensity;
+    }
+
+
+}
